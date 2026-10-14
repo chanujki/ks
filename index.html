@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6558f5">
+<meta name="description" content="Rikuu — connect simply with a six-digit Chat ID.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rikuu">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/rikuu-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<title>Rikuu — Messenger</title>
+</head>
+<body>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<div id="updateBanner" class="update-banner" hidden>
+  <span>নতুন version পাওয়া গেছে</span>
+  <button id="updateNow">Update</button>
+</div>
+
+<!-- ============ AUTH ============ -->
+<section id="auth" class="auth">
+  <div class="auth-blob b1" aria-hidden="true"></div>
+  <div class="auth-blob b2" aria-hidden="true"></div>
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="logo">R</div>
+      <div>
+        <h1>Rikuu</h1>
+        <p>Six-digit Chat ID দিয়ে সহজে যুক্ত হোন</p>
+      </div>
+    </div>
+    <div class="seg" role="tablist">
+      <button id="tabSign" class="active" role="tab">নতুন account</button>
+      <button id="tabLogin" role="tab">Login</button>
+    </div>
+
+    <div id="signBox">
+      <label class="field"><span>আপনার নাম</span><input id="sName" maxlength="32" placeholder="যেমন: রাকিব" autocomplete="name"></label>
+      <label class="field"><span>PIN (৪–৬ সংখ্যা)</span><input id="sPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="new-password"></label>
+      <div id="sErr" class="err" hidden></div>
+      <button id="signBtn" class="primary">Chat ID তৈরি করুন</button>
+    </div>
+
+    <div id="loginBox" hidden>
+      <label class="field"><span>Chat ID</span><input id="lId" inputmode="numeric" maxlength="6" placeholder="৬ সংখ্যার ID"></label>
+      <label class="field"><span>PIN</span><input id="lPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="current-password"></label>
+      <div id="lErr" class="err" hidden></div>
+      <button id="loginBtn" class="primary">Login</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<div id="app" class="app" hidden>
+
+  <aside class="sidebar" aria-label="চ্যাট তালিকা">
+    <header class="side-head">
+      <div class="me" id="profile"></div>
+      <div class="side-actions">
+        <button id="notifyBtn" class="icon-btn" title="নোটিফিকেশন চালু করুন" aria-label="নোটিফিকেশন">🔔</button>
+        <button id="soundBtn" class="icon-btn" title="সাউন্ড" aria-label="সাউন্ড">🔊</button>
+        <button id="themeBtn" class="icon-btn" title="থিম" aria-label="থিম">☾</button>
+        <button id="installBtn" class="icon-btn" title="App install করুন" aria-label="Install" hidden>⬇</button>
+        <button id="logoutBtn" class="icon-btn" title="Logout" aria-label="Logout">⎋</button>
+      </div>
+    </header>
+
+    <div class="search-wrap">
+      <span aria-hidden="true">⌕</span>
+      <input id="search" inputmode="numeric" maxlength="6" placeholder="Chat ID দিয়ে খুঁজুন" aria-label="Chat ID খুঁজুন">
+    </div>
+    <div id="searchResults" class="search-results"></div>
+
+    <div class="section-label">Chats</div>
+    <div id="recent" class="chat-list"></div>
+  </aside>
+
+  <main class="chat" id="chat">
+    <div id="empty" class="empty">
+      <div class="empty-art" aria-hidden="true">💬</div>
+      <h2>Rikuu-তে স্বাগতম</h2>
+      <p>বাম পাশ থেকে একটি chat বেছে নিন, অথবা Chat ID দিয়ে নতুন কাউকে খুঁজুন।</p>
+    </div>
+
+    <div id="convo" class="convo" hidden>
+      <header class="chat-head">
+        <button id="back" class="icon-btn back" aria-label="ফিরে যান">←</button>
+        <div id="headAvatar"></div>
+        <div class="head-info">
+          <b id="headName"></b>
+          <span id="headStatus"></span>
+        </div>
+        <div class="head-actions">
+          <button id="audioBtn" class="icon-btn" title="অডিও কল" aria-label="অডিও কল">📞</button>
+          <button id="videoBtn" class="icon-btn" title="ভিডিও কল" aria-label="ভিডিও কল">🎥</button>
+        </div>
+      </header>
+
+      <div id="messages" class="messages"></div>
+
+      <div id="typing" class="typing" hidden>
+        <span></span><span></span><span></span><em>টাইপ করছে…</em>
+      </div>
+
+      <div id="replyBar" class="reply-bar" hidden>
+        <div><b id="replyName"></b><span id="replyText"></span></div>
+        <button id="replyClose" class="icon-btn" aria-label="বাতিল">✕</button>
+      </div>
+
+      <div id="emojiPanel" class="emoji-panel" hidden></div>
+
+      <div id="recBar" class="rec-bar" hidden>
+        <span class="rec-dot"></span>
+        <span>রেকর্ড হচ্ছে</span>
+        <span id="recTime">00:00</span>
+        <button id="recCancel">বাতিল</button>
+      </div>
+
+      <div class="composer">
+        <button id="attach" class="icon-btn" title="ছবি পাঠান" aria-label="ছবি পাঠান">🖼</button>
+        <input id="imgInput" type="file" accept="image/*" hidden>
+        <button id="emojiBtn" class="icon-btn" title="ইমোজি" aria-label="ইমোজি">😊</button>
+        <textarea id="msg" rows="1" placeholder="মেসেজ লিখুন…" aria-label="মেসেজ"></textarea>
+        <button id="micBtn" class="icon-btn" title="ভয়েস মেসেজ" aria-label="ভয়েস মেসেজ">🎤</button>
+        <button id="send" class="send" aria-label="পাঠান">➤</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ PROFILE MODAL ============ -->
+<div id="profileModal" class="modal" hidden>
+  <div class="modal-box" role="dialog" aria-label="প্রোফাইল">
+    <button id="pmClose" class="icon-btn modal-x" aria-label="বন্ধ করুন">✕</button>
+    <div id="pmAvatar" class="pm-avatar"></div>
+    <button id="pmPhotoBtn" class="pm-photo-btn">📷 ছবি বদলান</button>
+    <input id="pmPhotoInput" type="file" accept="image/*" hidden>
+    <label class="field"><span>নাম</span><input id="pmName" maxlength="32"></label>
+    <label class="field"><span>Bio</span><input id="pmBio" maxlength="80" placeholder="নিজের সম্পর্কে কিছু লিখুন"></label>
+    <div class="pm-id"><span id="pmId"></span><button id="pmCopy">⧉ কপি</button></div>
+    <div id="pmErr" class="err" hidden></div>
+    <div class="pm-actions">
+      <button id="pmCancel" class="ghost">বাতিল</button>
+      <button id="pmSave" class="primary">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MESSAGE ACTION SHEET ============ -->
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-box" role="dialog" aria-label="মেসেজ অপশন">
+    <div class="sheet-reacts" id="sheetReacts"></div>
+    <button class="sheet-btn" id="sheetReply">↩ Reply</button>
+    <button class="sheet-btn" id="sheetEdit">✏️ Edit</button>
+    <button class="sheet-btn" id="sheetCopy">📋 Copy</button>
+    <button class="sheet-btn danger" id="sheetDelete">🗑 Delete</button>
+  </div>
+</div>
+
+<!-- ============ INCOMING CALL ============ -->
+<div id="incoming" class="incoming" hidden role="dialog" aria-label="ইনকামিং কল">
+  <div class="incoming-card">
+    <div id="incAvatar"></div>
+    <b id="incomingTitle"></b>
+    <span id="incomingText"></span>
+    <div class="inc-actions">
+      <button id="decline" class="ctrl end" aria-label="প্রত্যাখ্যান">✕</button>
+      <button id="accept" class="ctrl ok" aria-label="গ্রহণ">✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ACTIVE CALL ============ -->
+<div id="call" class="call" hidden>
+  <video id="remote" autoplay playsinline></video>
+  <div id="callAvatar"></div>
+  <video id="local" autoplay playsinline muted></video>
+
+  <div class="call-top">
+    <b id="callName"></b>
+    <span id="callTitle"></span>
+    <div id="callTimer"></div>
+  </div>
+
+  <div class="call-controls">
+    <button id="toggleMic" class="ctrl" title="মাইক" aria-label="মাইক">🎙️</button>
+    <button id="toggleCam" class="ctrl" title="ক্যামেরা" aria-label="ক্যামেরা">📷</button>
+    <button id="flipCam" class="ctrl" title="ক্যামেরা ঘোরান" aria-label="ক্যামেরা ঘোরান">🔄</button>
+    <button id="shareScreen" class="ctrl" title="স্ক্রিন শেয়ার" aria-label="স্ক্রিন শেয়ার">🖥️</button>
+    <button id="hangup" class="ctrl end" title="কল শেষ" aria-label="কল শেষ">📵</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="app.js" defer></script>
+</body>
+</html>
