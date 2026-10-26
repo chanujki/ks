@@ -3,202 +3,300 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#6558f5">
-<meta name="description" content="Rikuu — connect simply with a six-digit Chat ID.">
+<meta name="theme-color" content="#6366f1">
+<meta name="description" content="Rikuu — Next-gen Social Feed & Messenger with 6-digit Chat ID">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Rikuu">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/rikuu-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<title>Rikuu — Messenger</title>
+<title>Rikuu — Social & Messenger</title>
 </head>
 <body>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<div id="updateBanner" class="update-banner" hidden>
-  <span>নতুন version পাওয়া গেছে</span>
-  <button id="updateNow">Update</button>
-</div>
-
-<!-- ============ AUTH ============ -->
+<!-- ============ AUTHENTICATION ============ -->
 <section id="auth" class="auth">
-  <div class="auth-blob b1" aria-hidden="true"></div>
-  <div class="auth-blob b2" aria-hidden="true"></div>
+  <div class="auth-glow ag1"></div>
+  <div class="auth-glow ag2"></div>
   <div class="auth-card">
-    <div class="auth-brand">
-      <div class="logo">R</div>
-      <div>
-        <h1>Rikuu</h1>
-        <p>Six-digit Chat ID দিয়ে সহজে যুক্ত হোন</p>
-      </div>
+    <div class="auth-logo">R</div>
+    <div class="auth-header">
+      <h1>Rikuu</h1>
+      <p>সোশ্যাল ফিড ও সিক্রেট ৬-ডিজিট চ্যাট আইডি</p>
     </div>
-    <div class="seg" role="tablist">
-      <button id="tabSign" class="active" role="tab">নতুন account</button>
-      <button id="tabLogin" role="tab">Login</button>
+
+    <!-- GOOGLE ONE-CLICK SIGN IN -->
+    <button id="googleBtn" class="google-btn">
+      <svg class="g-icon" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+      </svg>
+      <span>Google দিয়ে সরাসরি ঢুকুন</span>
+    </button>
+
+    <div class="auth-divider"><span>অথবা পিন দিয়ে লগইন করুন</span></div>
+    
+    <div class="seg-nav" role="tablist">
+      <button id="tabSign" class="active">নতুন অ্যাকাউন্ট</button>
+      <button id="tabLogin">লগইন</button>
     </div>
 
     <div id="signBox">
-      <label class="field"><span>আপনার নাম</span><input id="sName" maxlength="32" placeholder="যেমন: রাকিব" autocomplete="name"></label>
-      <label class="field"><span>PIN (৪–৬ সংখ্যা)</span><input id="sPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="new-password"></label>
+      <label class="field">
+        <span>আপনার নাম</span>
+        <input id="sName" maxlength="32" placeholder="যেমন: রাকিব হাসান" autocomplete="name">
+      </label>
+      <label class="field">
+        <span>সিক্রেট পিন (৪–৬ সংখ্যা)</span>
+        <input id="sPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••">
+      </label>
       <div id="sErr" class="err" hidden></div>
-      <button id="signBtn" class="primary">Chat ID তৈরি করুন</button>
+      <button id="signBtn" class="primary" style="width:100%">অ্যাকাউন্ট তৈরি করুন</button>
     </div>
 
     <div id="loginBox" hidden>
-      <label class="field"><span>Chat ID</span><input id="lId" inputmode="numeric" maxlength="6" placeholder="৬ সংখ্যার ID"></label>
-      <label class="field"><span>PIN</span><input id="lPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••" autocomplete="current-password"></label>
+      <label class="field">
+        <span>৬-সংখ্যার চ্যাট আইডি</span>
+        <input id="lId" inputmode="numeric" maxlength="6" placeholder="যেমন: 582914">
+      </label>
+      <label class="field">
+        <span>পিন নম্বর</span>
+        <input id="lPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••">
+      </label>
       <div id="lErr" class="err" hidden></div>
-      <button id="loginBtn" class="primary">Login</button>
+      <button id="loginBtn" class="primary" style="width:100%">লগইন করুন</button>
     </div>
   </div>
 </section>
 
-<!-- ============ APP ============ -->
+<!-- ============ MAIN APP ============ -->
 <div id="app" class="app" hidden>
 
-  <aside class="sidebar" aria-label="চ্যাট তালিকা">
-    <header class="side-head">
-      <div class="me" id="profile"></div>
-      <div class="side-actions">
-        <button id="notifyBtn" class="icon-btn" title="নোটিফিকেশন চালু করুন" aria-label="নোটিফিকেশন">🔔</button>
-        <button id="soundBtn" class="icon-btn" title="সাউন্ড" aria-label="সাউন্ড">🔊</button>
-        <button id="themeBtn" class="icon-btn" title="থিম" aria-label="থিম">☾</button>
-        <button id="installBtn" class="icon-btn" title="App install করুন" aria-label="Install" hidden>⬇</button>
-        <button id="logoutBtn" class="icon-btn" title="Logout" aria-label="Logout">⎋</button>
-      </div>
-    </header>
-
-    <div class="search-wrap">
-      <span aria-hidden="true">⌕</span>
-      <input id="search" inputmode="numeric" maxlength="6" placeholder="Chat ID দিয়ে খুঁজুন" aria-label="Chat ID খুঁজুন">
-    </div>
-    <div id="searchResults" class="search-results"></div>
-
-    <div class="section-label">Chats</div>
-    <div id="recent" class="chat-list"></div>
-  </aside>
-
-  <main class="chat" id="chat">
-    <div id="empty" class="empty">
-      <div class="empty-art" aria-hidden="true">💬</div>
-      <h2>Rikuu-তে স্বাগতম</h2>
-      <p>বাম পাশ থেকে একটি chat বেছে নিন, অথবা Chat ID দিয়ে নতুন কাউকে খুঁজুন।</p>
+  <!-- TOP NAVIGATION BAR (Facebook + Messenger Switcher) -->
+  <header class="app-navbar">
+    <div class="nav-brand">
+      <div class="nav-logo">R</div>
+      <span class="nav-title">Rikuu</span>
     </div>
 
-    <div id="convo" class="convo" hidden>
-      <header class="chat-head">
-        <button id="back" class="icon-btn back" aria-label="ফিরে যান">←</button>
-        <div id="headAvatar"></div>
-        <div class="head-info">
-          <b id="headName"></b>
-          <span id="headStatus"></span>
+    <div class="nav-tabs">
+      <button id="tabFeed" class="nav-tab active">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        <span>নিউজফিড</span>
+      </button>
+      <button id="tabChat" class="nav-tab">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        <span>মেসেঞ্জার</span>
+        <span id="unreadDot" class="unread-glow" hidden></span>
+      </button>
+    </div>
+
+    <div class="nav-right">
+      <div id="profile" class="user-pill" title="প্রোফাইল"></div>
+      <button id="themeBtn" class="icon-btn" title="থিম">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+      </button>
+      <button id="logoutBtn" class="icon-btn" title="লগআউট">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 0 1 2 2v2h-2V4H5v16h9v-2h2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= VIEW 1: SOCIAL FEED ================= -->
+  <main id="feedView" class="view-container feed-view">
+    <div class="feed-wrapper">
+      
+      <!-- CREATE POST CARD -->
+      <div class="post-create-card">
+        <div class="create-head">
+          <div id="createAvatar"></div>
+          <textarea id="postInput" placeholder="আপনার মনে এখন কী চলছে?" rows="2"></textarea>
         </div>
-        <div class="head-actions">
-          <button id="audioBtn" class="icon-btn" title="অডিও কল" aria-label="অডিও কল">📞</button>
-          <button id="videoBtn" class="icon-btn" title="ভিডিও কল" aria-label="ভিডিও কল">🎥</button>
+
+        <div id="postImgPreviewBox" class="post-preview-box" hidden>
+          <img id="postImgPreview" src="" alt="প্রিভিউ">
+          <button id="removePostImg" class="icon-btn remove-img">✕</button>
         </div>
-      </header>
 
-      <div id="messages" class="messages"></div>
+        <div class="create-actions">
+          <button id="addPostImgBtn" class="action-btn">
+            <svg class="icon" viewBox="0 0 24 24" style="color:#10b981"><path d="M19 5v14H5V5h14m0-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/></svg>
+            <span>ছবি যুক্ত করুন</span>
+          </button>
+          <input id="postImgFile" type="file" accept="image/*" hidden>
 
-      <div id="typing" class="typing" hidden>
-        <span></span><span></span><span></span><em>টাইপ করছে…</em>
+          <button id="submitPost" class="primary" style="padding: 9px 22px;">পোস্ট করুন</button>
+        </div>
       </div>
 
-      <div id="replyBar" class="reply-bar" hidden>
-        <div><b id="replyName"></b><span id="replyText"></span></div>
-        <button id="replyClose" class="icon-btn" aria-label="বাতিল">✕</button>
+      <!-- POSTS STREAM -->
+      <div id="postsStream" class="posts-stream">
+        <div style="text-align:center; padding: 40px; color:var(--text-muted)">ফিড লোড হচ্ছে…</div>
       </div>
 
-      <div id="emojiPanel" class="emoji-panel" hidden></div>
-
-      <div id="recBar" class="rec-bar" hidden>
-        <span class="rec-dot"></span>
-        <span>রেকর্ড হচ্ছে</span>
-        <span id="recTime">00:00</span>
-        <button id="recCancel">বাতিল</button>
-      </div>
-
-      <div class="composer">
-        <button id="attach" class="icon-btn" title="ছবি পাঠান" aria-label="ছবি পাঠান">🖼</button>
-        <input id="imgInput" type="file" accept="image/*" hidden>
-        <button id="emojiBtn" class="icon-btn" title="ইমোজি" aria-label="ইমোজি">😊</button>
-        <textarea id="msg" rows="1" placeholder="মেসেজ লিখুন…" aria-label="মেসেজ"></textarea>
-        <button id="micBtn" class="icon-btn" title="ভয়েস মেসেজ" aria-label="ভয়েস মেসেজ">🎤</button>
-        <button id="send" class="send" aria-label="পাঠান">➤</button>
-      </div>
     </div>
+  </main>
+
+  <!-- ================= VIEW 2: MESSENGER (CHATS) ================= -->
+  <main id="chatView" class="view-container chat-view-split" hidden>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div id="storyStrip" class="story-strip"></div>
+
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 3a6.5 6.5 0 0 1 5.25 10.35l4.7 4.7-1.42 1.42-4.7-4.7A6.5 6.5 0 1 1 9.5 3m0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/></svg>
+        <input id="search" placeholder="৬-সংখ্যার আইডি বা নাম দিয়ে খুঁজুন…" maxlength="20">
+      </div>
+      <div id="searchResults" style="padding: 0 12px;"></div>
+
+      <div id="recent" class="chat-list"></div>
+    </aside>
+
+    <!-- CHAT BOX -->
+    <section class="chat-main">
+      <div id="empty" class="chat-empty">
+        <div class="pulse-icon">💬</div>
+        <h2>মেসেঞ্জার স্পেস</h2>
+        <p>বাম পাশ থেকে যেকোনো চ্যাট বেছে নিন অথবা ফিড থেকে বন্ধুদের সাথে কথোপকথন শুরু করুন।</p>
+      </div>
+
+      <div id="convo" class="chat-active" hidden>
+        <header class="chat-topbar">
+          <button id="back" class="icon-btn back-btn">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+          <div id="headAvatar"></div>
+          <div class="chat-user-detail">
+            <b id="headName"></b>
+            <span id="headStatus"></span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button id="audioBtn" class="icon-btn" title="অডিও কল">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            </button>
+            <button id="videoBtn" class="icon-btn" title="ভিডিও কল">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <div id="messages" class="msg-container"></div>
+
+        <div id="typing" class="typing-bar" hidden>
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+          <em>টাইপ করছেন…</em>
+        </div>
+
+        <div id="replyBar" class="quote-box" style="margin: 0 18px 4px;" hidden>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div><b id="replyName"></b>: <span id="replyText"></span></div>
+            <button id="replyClose" class="icon-btn" style="width:24px;height:24px">✕</button>
+          </div>
+        </div>
+
+        <div id="emojiPanel" class="emoji-drawer" hidden></div>
+
+        <div id="recBar" class="voice-rec-pill" style="margin: 0 18px 4px;" hidden>
+          <div class="red-blink"></div>
+          <span>রেকর্ডিং চলছে</span>
+          <span id="recTime">00:00</span>
+          <button id="recCancel" style="margin-left:auto; color:var(--danger)">বাতিল</button>
+        </div>
+
+        <div class="composer-area">
+          <div class="composer-row">
+            <button id="attach" class="icon-btn" title="ছবি">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z"/></svg>
+            </button>
+            <input id="imgInput" type="file" accept="image/*" hidden>
+            <button id="emojiBtn" class="icon-btn" title="ইমোজি">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm3.5-9a1.5 1.5 0 1 0-1.5-1.5 1.5 1.5 0 0 0 1.5 1.5zm-7 0A1.5 1.5 0 1 0 7 9.5 1.5 1.5 0 0 0 8.5 11zm3.5 6.5a5.5 5.5 0 0 0 4.88-3h-9.76A5.5 5.5 0 0 0 12 17.5z"/></svg>
+            </button>
+            
+            <textarea id="msg" class="composer-input" rows="1" placeholder="মেসেজ লিখুন (ডাবল ক্লিকে ❤️)…"></textarea>
+            
+            <button id="micBtn" class="icon-btn" title="ভয়েস রেকর্ড">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11z"/></svg>
+            </button>
+            
+            <button id="send" class="send-btn" title="পাঠান">
+              <svg class="icon" viewBox="0 0 24 24" style="transform: rotate(45deg);"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
+<!-- ============ LIGHTBOX ============ -->
+<div id="lightbox" class="lightbox" hidden>
+  <button id="lbClose" class="icon-btn lightbox-close">✕</button>
+  <img id="lbImg" src="" alt="প্রিভিউ">
+</div>
+
 <!-- ============ PROFILE MODAL ============ -->
-<div id="profileModal" class="modal" hidden>
-  <div class="modal-box" role="dialog" aria-label="প্রোফাইল">
-    <button id="pmClose" class="icon-btn modal-x" aria-label="বন্ধ করুন">✕</button>
-    <div id="pmAvatar" class="pm-avatar"></div>
-    <button id="pmPhotoBtn" class="pm-photo-btn">📷 ছবি বদলান</button>
+<div id="profileModal" class="lightbox" hidden>
+  <div class="auth-card" style="width: min(380px, 94vw);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 style="font-weight:700">প্রোফাইল তথ্য</h3>
+      <button id="pmClose" class="icon-btn">✕</button>
+    </div>
+    <div id="pmAvatar" style="display:flex; justify-content:center; margin-bottom:12px;"></div>
+    <button id="pmPhotoBtn" class="primary" style="margin: 0 auto 16px; padding: 6px 14px; font-size:0.8rem;">📷 ছবি পরিবর্তন</button>
     <input id="pmPhotoInput" type="file" accept="image/*" hidden>
+    
     <label class="field"><span>নাম</span><input id="pmName" maxlength="32"></label>
-    <label class="field"><span>Bio</span><input id="pmBio" maxlength="80" placeholder="নিজের সম্পর্কে কিছু লিখুন"></label>
-    <div class="pm-id"><span id="pmId"></span><button id="pmCopy">⧉ কপি</button></div>
+    <label class="field"><span>বায়ো (Bio)</span><input id="pmBio" maxlength="80"></label>
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--panel-hover); padding:10px 14px; border-radius:12px; margin-bottom:16px;">
+      <span id="pmId" style="font-weight:700; color:var(--brand-primary)"></span>
+      <button id="pmCopy" class="primary" style="padding:4px 10px; font-size:0.75rem;">কপি আইডি</button>
+    </div>
+    
     <div id="pmErr" class="err" hidden></div>
-    <div class="pm-actions">
-      <button id="pmCancel" class="ghost">বাতিল</button>
-      <button id="pmSave" class="primary">Save</button>
+    <button id="pmSave" class="primary" style="width:100%">সংরক্ষণ করুন</button>
+  </div>
+</div>
+
+<!-- ============ CALL OVERLAY ============ -->
+<div id="call" class="call-hub" hidden>
+  <video id="remoteVideo" autoplay playsinline></video>
+  <video id="localVideo" autoplay playsinline muted></video>
+  <div class="call-hud-top">
+    <b id="callName" style="font-size:1.1rem; display:block"></b>
+    <span id="callTitle" style="color:var(--text-muted); font-size:0.85rem"></span>
+    <div id="callTimer" style="font-weight:700; margin-top:4px"></div>
+  </div>
+  <div class="call-actions-row">
+    <button id="toggleMic" class="call-ctrl">🎙️</button>
+    <button id="toggleCam" class="call-ctrl">📷</button>
+    <button id="flipCam" class="call-ctrl">🔄</button>
+    <button id="hangup" class="call-ctrl end">📵</button>
+  </div>
+</div>
+
+<!-- ============ INCOMING CALL PROMPT ============ -->
+<div id="incoming" class="lightbox" hidden>
+  <div class="auth-card" style="text-align:center; width:300px;">
+    <div id="incAvatar" style="display:flex; justify-content:center; margin-bottom:14px;"></div>
+    <b id="incomingTitle" style="font-size:1.2rem; display:block"></b>
+    <span id="incomingText" style="color:var(--text-muted); font-size:0.85rem"></span>
+    <div style="display:flex; justify-content:center; gap:24px; margin-top:20px;">
+      <button id="decline" class="call-ctrl end">✕</button>
+      <button id="accept" class="call-ctrl" style="background:var(--online)">✓</button>
     </div>
   </div>
 </div>
 
-<!-- ============ MESSAGE ACTION SHEET ============ -->
-<div id="sheet" class="sheet" hidden>
-  <div class="sheet-box" role="dialog" aria-label="মেসেজ অপশন">
-    <div class="sheet-reacts" id="sheetReacts"></div>
-    <button class="sheet-btn" id="sheetReply">↩ Reply</button>
-    <button class="sheet-btn" id="sheetEdit">✏️ Edit</button>
-    <button class="sheet-btn" id="sheetCopy">📋 Copy</button>
-    <button class="sheet-btn danger" id="sheetDelete">🗑 Delete</button>
-  </div>
-</div>
-
-<!-- ============ INCOMING CALL ============ -->
-<div id="incoming" class="incoming" hidden role="dialog" aria-label="ইনকামিং কল">
-  <div class="incoming-card">
-    <div id="incAvatar"></div>
-    <b id="incomingTitle"></b>
-    <span id="incomingText"></span>
-    <div class="inc-actions">
-      <button id="decline" class="ctrl end" aria-label="প্রত্যাখ্যান">✕</button>
-      <button id="accept" class="ctrl ok" aria-label="গ্রহণ">✓</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============ ACTIVE CALL ============ -->
-<div id="call" class="call" hidden>
-  <video id="remote" autoplay playsinline></video>
-  <div id="callAvatar"></div>
-  <video id="local" autoplay playsinline muted></video>
-
-  <div class="call-top">
-    <b id="callName"></b>
-    <span id="callTitle"></span>
-    <div id="callTimer"></div>
-  </div>
-
-  <div class="call-controls">
-    <button id="toggleMic" class="ctrl" title="মাইক" aria-label="মাইক">🎙️</button>
-    <button id="toggleCam" class="ctrl" title="ক্যামেরা" aria-label="ক্যামেরা">📷</button>
-    <button id="flipCam" class="ctrl" title="ক্যামেরা ঘোরান" aria-label="ক্যামেরা ঘোরান">🔄</button>
-    <button id="shareScreen" class="ctrl" title="স্ক্রিন শেয়ার" aria-label="স্ক্রিন শেয়ার">🖥️</button>
-    <button id="hangup" class="ctrl end" title="কল শেষ" aria-label="কল শেষ">📵</button>
-  </div>
-</div>
-
+<!-- FIREBASE SDKs (App, Auth, Realtime Database) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="app.js" defer></script>
 </body>
